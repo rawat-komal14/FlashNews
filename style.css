@@ -1,0 +1,66 @@
+:root {
+    --bg-color: #f0f2f5;
+    --text-color: #1c1e21;
+    --card-bg: #ffffff;
+    --accent-color: #ff4757;
+    --border: #ddd;
+}
+
+[data-theme="dark"] {
+    --bg-color: #18191a;
+    --text-color: #e4e6eb;
+    --card-bg: #242526;
+    --border: #3e4042;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    transition: 0.3s;
+}
+
+.container { width: 95%; max-width: 1200px; margin: 0 auto; }
+
+header {
+    background: var(--card-bg);
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+.logo-area { display: flex; align-items: center; gap: 10px; }
+
+.app-icon {
+    background: var(--accent-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.search-bar { display: flex; flex: 1; max-width: 400px; }
+.search-bar input { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 4px 0 0 4px; }
+.search-bar button { background: #333; color: white; border: none; padding: 0 15px; border-radius: 0 4px 4px 0; cursor: pointer; }
+
+nav { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+nav button { background: none; border: 1px solid var(--border); padding: 5px 15px; border-radius: 20px; color: var(--text-color); cursor: pointer; }
+nav button.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px 0; }
+
+.card { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+.card img { width: 100%; height: 180px; object-fit: cover; }
+.card-body { padding: 15px; flex: 1; }
+.card-body h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
+
+.bookmark-btn { background: #eee; border: none; padding: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+
+/* Modal Styling */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+.modal-content { background: var(--card-bg); margin: 10% auto; padding: 25px; width: 90%; max-width: 500px; border-radius: 12px; position: relative; }
+.close-btn { position: absolute; right: 20px; top: 10px; font-size: 24px; cursor: pointer; }
