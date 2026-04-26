@@ -4,6 +4,7 @@
     --card-bg: #ffffff;
     --accent-color: #ff4757;
     --border: #ddd;
+    --summary-bg: #f9f9f9;
 }
 
 [data-theme="dark"] {
@@ -11,6 +12,7 @@
     --text-color: #e4e6eb;
     --card-bg: #242526;
     --border: #3e4042;
+    --summary-bg: #2d2e2f;
 }
 
 body {
@@ -27,24 +29,15 @@ header {
     background: var(--card-bg);
     padding: 15px 0;
     border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
 }
 
 .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
 .logo-area { display: flex; align-items: center; gap: 10px; }
-
-.app-icon {
-    background: var(--accent-color);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: bold;
-}
+.app-icon { background: var(--accent-color); color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; }
 
 .search-bar { display: flex; flex: 1; max-width: 400px; }
-.search-bar input { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 4px 0 0 4px; }
+.search-bar input { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 4px 0 0 4px; background: var(--card-bg); color: var(--text-color); }
 .search-bar button { background: #333; color: white; border: none; padding: 0 15px; border-radius: 0 4px 4px 0; cursor: pointer; }
 
 nav { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
@@ -56,11 +49,20 @@ nav button.active { background: var(--accent-color); color: white; border-color:
 .card { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
 .card img { width: 100%; height: 180px; object-fit: cover; }
 .card-body { padding: 15px; flex: 1; }
-.card-body h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
+.card-body h3 { margin-top: 0; font-size: 1.1rem; }
 
-.bookmark-btn { background: #eee; border: none; padding: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+.summary-toggle-btn { background: none; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin: 10px 0; }
+.card-summary { background: var(--summary-bg); padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 12px; border-left: 4px solid var(--accent-color); color: var(--text-color); line-height: 1.4; }
+.hidden { display: none; }
 
-/* Modal Styling */
+.bookmark-btn { background: #eee; border: none; padding: 12px; cursor: pointer; width: 100%; font-weight: bold; color: #333; }
+[data-theme="dark"] .bookmark-btn { background: #3e4042; color: white; }
+
+/* Modal & Quiz Styles */
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-.modal-content { background: var(--card-bg); margin: 10% auto; padding: 25px; width: 90%; max-width: 500px; border-radius: 12px; position: relative; }
+.modal-content { background: var(--card-bg); margin: 5% auto; padding: 25px; width: 90%; max-width: 600px; border-radius: 12px; position: relative; }
 .close-btn { position: absolute; right: 20px; top: 10px; font-size: 24px; cursor: pointer; }
+
+.quiz-option-label { display: block; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+.quiz-option-label:hover { background: var(--accent-color); color: white; }
+#submit-quiz { background: var(--accent-color); color: white; border: none; font-weight: bold; border-radius: 6px; }
