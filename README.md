@@ -8,8 +8,8 @@ There are several additional features that users may enjoy, such as bookmarking 
 Overall, the purpose of FlashNews is to show that a complete website can be created through connecting UI elements with the backend services that provide data and information, making the experience both seamless and responsive.
 
 TECH STACK:
-Frontend: HTML, CSS, JavaScript
-Backend: Python with Flask
-API Integration: NewsAPI
-Storage: Browser LocalStorage
+Frontend: HTML, CSS, JavaScript,
+Backend: Python with Flask,
+API Integration: NewsAPI,
+Storage: Browser LocalStorage,
 Communication: REST API 
