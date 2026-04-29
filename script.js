@@ -1,4 +1,4 @@
-// --- 1. CONFIGURATION ---
+
 const BASE_URL = 'http://127.0.0.1:5001/api';
 const newsGrid = document.getElementById('news-grid');
 const searchInput = document.getElementById('search-input');
@@ -6,7 +6,7 @@ const sectionTitle = document.getElementById('section-title');
 const bookmarkBtn = document.getElementById('show-bookmarks');
 const quizModal = document.getElementById('quiz-modal');
 
-// --- 2. STATE MANAGEMENT ---
+
 let articles = [];
 let bookmarks = JSON.parse(localStorage.getItem('fn-bookmarks')) || [];
 let isShowingBookmarks = false;
@@ -14,9 +14,7 @@ let currentQuiz = [];
 let quizStep = 0;
 let userScore = 0;
 
-/**
- * 3. CORE DATA FETCHING
- */
+
 async function loadNews(params = 'category=general') {
     isShowingBookmarks = false;
     bookmarkBtn.innerText = "🔖 Bookmarks";
@@ -36,9 +34,7 @@ async function loadNews(params = 'category=general') {
     }
 }
 
-/**
- * 4. UI RENDERING (News Cards)
- */
+
 function displayNews(newsItems) {
     if (newsItems.length === 0) {
         newsGrid.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>No articles found.</p>";
@@ -64,16 +60,14 @@ function displayNews(newsItems) {
     }).join('');
 }
 
-// Instant Summary Toggle
+
 window.toggleSummary = (index) => {
     const el = document.getElementById(`summary-${index}`);
     const isHidden = el.classList.toggle('hidden');
     el.previousElementSibling.innerText = isHidden ? "📋 View Summary" : "✖ Hide Summary";
 };
 
-/**
- * 5. SEARCH & NAVIGATION (Includes Highlighting Fix)
- */
+
 document.getElementById('search-btn').onclick = () => {
     const query = searchInput.value.trim();
     if (query) {
@@ -85,14 +79,13 @@ document.getElementById('search-btn').onclick = () => {
     }
 };
 
-// Search on Enter key
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') document.getElementById('search-btn').click();
 });
 
 document.querySelectorAll('.category-btn').forEach(btn => {
     btn.onclick = (e) => {
-        // Clear all highlights and set the new one
+        
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         
@@ -102,9 +95,7 @@ document.querySelectorAll('.category-btn').forEach(btn => {
     };
 });
 
-/**
- * 6. COMPREHENSION QUIZ LOGIC
- */
+
 document.getElementById('start-quiz-btn').onclick = async () => {
     quizModal.style.display = 'block';
     const container = document.getElementById('quiz-container');
@@ -177,9 +168,7 @@ function showFinalResults() {
     document.getElementById('quiz-results').innerHTML = "";
 }
 
-/**
- * 7. BOOKMARKS & UI CONTROLS
- */
+
 window.toggleBookmark = (idx) => {
     const list = isShowingBookmarks ? bookmarks : articles;
     const item = list[idx];
@@ -208,5 +197,4 @@ document.querySelector('.close-btn').onclick = () => {
     quizModal.style.display = 'none';
 };
 
-// Initial Start
 loadNews();
