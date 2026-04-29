@@ -1,27 +1,24 @@
 const BASE_URL = 'http://127.0.0.1:5001/api';
 
-// Getting references of important HTML elements
 const newsGrid = document.getElementById('news-grid');
 const searchInput = document.getElementById('search-input');
 const sectionTitle = document.getElementById('section-title');
 const bookmarkBtn = document.getElementById('show-bookmarks');
 const quizModal = document.getElementById('quiz-modal');
 
-// Main data storage
 let articles = [];
 let bookmarks = JSON.parse(localStorage.getItem('fn-bookmarks')) || [];
 let isShowingBookmarks = false;
 
-// Quiz related variables
 let currentQuiz = [];
 let quizStep = 0, userScore = 0;
 
 
-// ------------------ LOAD NEWS ------------------
+
 async function loadNews(params = 'category=general') {
     isShowingBookmarks = false;
 
-    // Show loading message
+   
     newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">⚡ Loading...</p>';
 
     try {
@@ -29,7 +26,7 @@ async function loadNews(params = 'category=general') {
         const data = await res.json();
 
         if (data.status === "ok") {
-            // Filter valid articles
+            
             articles = data.articles.filter(a => a.title && a.description && a.title !== '[Removed]');
             displayNews(articles);
         } else {
@@ -42,7 +39,7 @@ async function loadNews(params = 'category=general') {
 }
 
 
-// ------------------ DISPLAY NEWS ------------------
+
 function displayNews(items) {
     newsGrid.innerHTML = items.map((item, idx) => {
         const isSaved = bookmarks.some(b => b.title === item.title);
@@ -70,20 +67,17 @@ function displayNews(items) {
 }
 
 
-// ------------------ SUMMARY TOGGLE ------------------
 window.toggleSummary = (idx) => {
     const el = document.getElementById(`summary-${idx}`);
 
     const isHidden = el.classList.toggle('hidden');
 
-    // Change button text based on state
     el.previousElementSibling.innerText = isHidden 
         ? "📋 View Summary" 
         : "✖ Hide Summary";
 };
 
 
-// ------------------ SEARCH ------------------
 document.getElementById('search-btn').onclick = () => {
     const query = searchInput.value.trim();
 
@@ -94,7 +88,7 @@ document.getElementById('search-btn').onclick = () => {
 };
 
 
-// ------------------ CATEGORY BUTTONS ------------------
+
 document.querySelectorAll('.category-btn').forEach(btn => {
     btn.onclick = (e) => {
         const cat = e.target.dataset.category;
@@ -105,7 +99,7 @@ document.querySelectorAll('.category-btn').forEach(btn => {
 });
 
 
-// ------------------ QUIZ START ------------------
+
 document.getElementById('start-quiz-btn').onclick = async () => {
     quizModal.style.display = 'block';
 
@@ -127,7 +121,7 @@ document.getElementById('start-quiz-btn').onclick = async () => {
 };
 
 
-// ------------------ RENDER QUESTION ------------------
+
 function renderQuestion() {
     const q = currentQuiz[quizStep];
 
@@ -146,8 +140,6 @@ function renderQuestion() {
     document.getElementById('submit-quiz').style.display = 'block';
 }
 
-
-// ------------------ SUBMIT ANSWER ------------------
 document.getElementById('submit-quiz').onclick = () => {
     const sel = document.querySelector('input[name="q-opt"]:checked');
 
@@ -172,7 +164,6 @@ document.getElementById('submit-quiz').onclick = () => {
 };
 
 
-// ------------------ BOOKMARK ------------------
 window.toggleBookmark = (idx) => {
     const item = isShowingBookmarks ? bookmarks[idx] : articles[idx];
 
@@ -189,8 +180,6 @@ window.toggleBookmark = (idx) => {
     displayNews(isShowingBookmarks ? bookmarks : articles);
 };
 
-
-// ------------------ SHOW BOOKMARKS ------------------
 bookmarkBtn.onclick = () => {
     isShowingBookmarks = !isShowingBookmarks;
 
@@ -200,7 +189,6 @@ bookmarkBtn.onclick = () => {
 };
 
 
-// ------------------ THEME TOGGLE ------------------
 document.getElementById('theme-toggle').onclick = () => {
     const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
 
@@ -208,11 +196,9 @@ document.getElementById('theme-toggle').onclick = () => {
 };
 
 
-// Close quiz modal
 document.querySelector('.close-btn').onclick = () => {
     quizModal.style.display = 'none';
 };
 
 
-// Initial load
 loadNews();
