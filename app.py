@@ -4,52 +4,82 @@ from flask_cors import CORS
 import random
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS so frontend can connect easily
 
-API_KEY = '7c2613a97f8d46f3a8e2bfd0546893b5'
+# NOTE: Using News API key (replace if needed later)
+API_KEY = '7c2613a97f8d46f3a8e2bfd0546893b5' 
 
-@app.route('/api/news', methods=['GET'])
+# ------------------ NEWS FETCH API ------------------
+@app.route('/api/news')
 def get_news():
+    # Getting query parameters from frontend
+    query = request.args.get('q')
     category = request.args.get('category', 'general')
-    url = f"https://newsapi.org/v2/top-headlines?country=us&category={category}&apiKey={API_KEY}"
-    response = requests.get(url)
-    return jsonify(response.json())
-
-# --- NEW QUIZ GENERATION ROUTE ---
-@app.route('/api/quiz', methods=['GET'])
-def get_quiz():
-    url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_KEY}"
-    response = requests.get(url).json()
-    articles = response.get('articles', [])
     
-    quiz_data = []
-    # Filter articles that have both a title and a description
-    valid_articles = [a for a in articles if a.get('title') and a.get('description')][:5]
+    # If user searches something → use search API
+    if query:
+        url = f"https://newsapi.org/v2/everything?q={query}&language=en&pageSize=20&apiKey={API_KEY}"
+    else:
+        # Otherwise load category-based headlines
+        url = f"https://newsapi.org/v2/top-headlines?country=us&category={category}&pageSize=20&apiKey={API_KEY}"
 
-    for art in valid_articles:
-        title = art['title']
-        description = art['description']
-        
-        # Create a "Subject" by taking the first few words of the headline
-        subject = " ".join(title.split()[:4])
-        
-        # Formulate a proper comprehension question
-        question = f"Based on recent reports regarding '{subject}...', what is the main event taking place?"
-        
-        # Wrong answers are pulled from other random descriptions
-        wrong_pool = [a['description'][:100] + "..." for a in articles if a['description'] != description]
-        distractors = random.sample(wrong_pool, 2) if len(wrong_pool) >= 2 else ["N/A", "N/A"]
-        
-        options = [description[:100] + "...", distractors[0], distractors[1]]
-        random.shuffle(options)
+    try:
+        response = requests.get(url)
+        return jsonify(response.json())  # Send response to frontend
+    except Exception as e:
+        # If any error happens, return message
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-        quiz_data.append({
-            "question": question,
-            "options": options,
-            "answer": description[:100] + "..."
-        })
 
-    return jsonify(quiz_data)
+# ------------------ QUIZ GENERATOR ------------------
+@app.route('/api/quiz')
+def get_quiz():
+    url = f"https://newsapi.org/v2/top-headlines?country=us&pageSize=30&apiKey={API_KEY}"
 
+    try:
+        res = requests.get(url).json()
+
+        # Filter only useful articles (having title + description)
+        articles = [a for a in res.get('articles', []) if a.get('description') and a.get('title')]
+        
+        if len(articles) < 5:
+            return jsonify({"status": "error", "message": "Not enough news"}), 404
+
+        quiz_data = []
+
+        # Some different question styles (to avoid repetition)
+        templates = [
+            "A recent report focuses on: '{subject}'. What is the main outcome described?",
+            "Regarding the news about '{subject}', which of the following is happening?",
+            "What is the key update in the latest report about '{subject}'?"
+        ]
+
+        # Creating 5 quiz questions
+        for art in articles[:5]:
+            # Taking first few words from title as subject
+            subject = " ".join(art['title'].split()[:5]).split(' - ')[0]
+
+            # Pick wrong answers from other articles
+            others = [a['description'] for a in articles if a['title'] != art['title']]
+            wrong = random.sample(others, 2)
+            
+            quiz_data.append({
+                "question": random.choice(templates).format(subject=subject),
+                "options": [art['description'], wrong[0], wrong[1]],
+                "answer": art['description']
+            })
+
+            # Shuffle options so correct answer is not always first
+            random.shuffle(quiz_data[-1]['options'])
+            
+        return jsonify(quiz_data)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+# Run server
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5001, debug=True)
+
+    
